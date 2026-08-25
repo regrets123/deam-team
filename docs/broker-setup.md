@@ -4,6 +4,6 @@ QOS level 1.
 TLS key is in git-secrets: (not implemented yet)
 
 topics: 
-iot25/dream-team/sensor/<typ av sensor><nummer>
-Ex: iot25/dream-team/sensor/temperature1
+iot25/deam-team/sensor/<typ av sensor><nummer>
+Ex: iot25/deam-team/sensor/temperature1
 
