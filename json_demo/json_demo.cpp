@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <ctime>
 
 #include <nlohmann/json.hpp>
 
@@ -10,6 +11,7 @@ struct Reading {
     std::string sensor_id;
     double value;
     std::string unit;
+    time_t time_stamp;
 };
 
 Reading parse_reading(const std::string& text) {
@@ -31,10 +33,15 @@ Reading parse_reading(const std::string& text) {
         throw std::runtime_error("unit must be a string");
     }
 
+     if (!data.contains("time_stamp") || !data["time_stamp"].is_number()) {
+        throw std::runtime_error("time_stamp must be a number");
+    }
+
     Reading reading{
         data["sensorId"].get<std::string>(),
         data["value"].get<double>(),
-        data["unit"].get<std::string>()
+        data["unit"].get<std::string>(),
+        data["time_stamp"].get<std::time_t>()
     };
 
     if (reading.sensor_id.empty()) {
@@ -50,7 +57,12 @@ Reading parse_reading(const std::string& text) {
             "temperature is outside the accepted range"
         );
     }
-
+    time_t now = time(&now);
+    if (reading.time_stamp < 0 || reading.time_stamp > now) {
+        throw std::runtime_error(
+            "we are either prehistoric or in the future, check the clock"
+        );
+    }
     return reading;
 }
 
@@ -58,20 +70,26 @@ std::string serialize_reading(const Reading& reading) {
     const json data{
         {"sensorId", reading.sensor_id},
         {"value", reading.value},
-        {"unit", reading.unit}
+        {"unit", reading.unit},
+        {"time_stamp", reading.time_stamp}
     };
-
     return data.dump(2);
 }
 
-int main() {
-    try {
+int main()
+{
+    try
+    {
+        time_t now = time(&now);
+        now += 1;
         const std::string input =
-            R"({"sensorId":"temp-01","value":21.7,"unit":"C"})";
+            R"({"sensorId":"temp-01","value":21.7,"unit":"C","time_stamp":)" + std::to_string(now) + "}";
 
         const Reading reading = parse_reading(input);
         std::cout << serialize_reading(reading) << '\n';
-    } catch (const std::exception& error) {
+    }
+    catch (const std::exception &error)
+    {
         std::cerr << "Ogiltig data: " << error.what() << '\n';
         return 1;
     }
