@@ -9,6 +9,7 @@ struct Reading {
     std::string sensor_id;
     double value;
     std::string unit;
+    time_t time_stamp;
 };
 
 Reading parse_reading(const std::string& text) {
@@ -30,10 +31,11 @@ Reading parse_reading(const std::string& text) {
     const pugi::xml_node sensor_id = root.child("sensorId");
     const pugi::xml_node value = root.child("value");
     const pugi::xml_node unit = root.child("unit");
+    const pugi::xml_node time_stamp = root.child("time_stamp");
 
-    if (!sensor_id || !value || !unit) {
+    if (!sensor_id || !value || !unit || !time_stamp ) {
         throw std::runtime_error(
-            "sensorId, value and unit are required"
+            "sensorId, value and unit and time_stamp are required"
         );
     }
 
@@ -49,10 +51,23 @@ Reading parse_reading(const std::string& text) {
         throw std::runtime_error("value must be a number");
     }
 
+    time_t parsed_time = 0;
+    std::istringstream time_stream(time_stamp.child_value());
+
+    if (!(time_stream >> parsed_time)) {
+        throw std::runtime_error("time must be a number");
+    }
+
+    time_stream >> std::ws;
+    if (time_stream.peek() != std::char_traits<char>::eof()) {
+        throw std::runtime_error("value must be a number");
+    }
+
     Reading reading{
         sensor_id.child_value(),
         parsed_value,
-        unit.child_value()
+        unit.child_value(),
+        parsed_time
     };
 
     if (reading.sensor_id.empty()) {
@@ -69,6 +84,12 @@ Reading parse_reading(const std::string& text) {
         );
     }
 
+    time_t now = time(&now);
+    if (reading.time_stamp < 0 || reading.time_stamp > now) {
+        throw std::runtime_error(
+            "we are either prehistoric or in the future, check the clock"
+        );
+    }
     return reading;
 }
 
@@ -91,7 +112,11 @@ std::string serialize_reading(const Reading& reading) {
     );
 
     root.append_child("unit").text().set(reading.unit.c_str());
-
+    std::ostringstream time;
+    time << reading.time_stamp;
+    root.append_child("time_stamp").text().set(
+        time.str().c_str()
+    );
     std::ostringstream output;
     document.save(output, "  ");
     return output.str();
@@ -104,6 +129,7 @@ int main() {
             "<sensorId>temp-01</sensorId>"
             "<value>21.7</value>"
             "<unit>C</unit>"
+            "<time_stamp>1</time_stamp>"
             "</reading>";
 
         const Reading reading = parse_reading(input);
