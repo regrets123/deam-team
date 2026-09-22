@@ -1,5 +1,4 @@
 #include "net.hpp"
-
 #include <iostream>
 #include <sstream>
 #include <string>
