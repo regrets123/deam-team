@@ -13,7 +13,7 @@ Koden använder endast operativsystemets sockets och C++ standardbibliotek. På 
 ## Bygg på Linux, macOS eller med MinGW
 
 ```bash
-cd dag_9/demo_observability_cpp
+cd day_9/demo_observability_cpp
 cmake -S . -B build
 cmake --build build
 ```
@@ -21,7 +21,7 @@ cmake --build build
 ## Bygg i Visual Studio Developer PowerShell
 
 ```powershell
-cd dag_9\demo_observability_cpp
+cd day_9\demo_observability_cpp
 cmake -S . -B build
 cmake --build build --config Debug
 ```

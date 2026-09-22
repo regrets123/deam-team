@@ -23,10 +23,16 @@ const char *dashboard = R"HTML(<!doctype html>
 <html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>IoT25 – lokal dashboard (C++)</title><style>
 body{font:16px system-ui,sans-serif;margin:2rem;background:#f4f7f9;color:#17222b}h1{margin-bottom:.25rem}#status{color:#52616b}
-main{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem}article{background:white;border-left:.4rem solid #167d8d;border-radius:.3rem;padding:1rem;box-shadow:0 .1rem .5rem #0002}article strong{display:block;font-size:1.7rem;margin-top:.4rem}code{font-size:.85rem}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem}article{background:white;border-left:.4rem solid
+ #167d8d;border-radius:.3rem;padding:1rem;box-shadow:0 .1rem .5rem #0002}article strong{display:block;font-size:1.7rem;margin-top:.4rem}code{font-size:.85rem}
 </style></head><body><h1>IoT-flödets mätetal</h1><p id="status">Hämtar…</p><main id="cards"></main><script>
-const shown=[["http_requests_total","HTTP-anrop","st"],["readings_accepted_total","Accepterade mätningar","st"],["validation_errors_total","Valideringsfel","st"],["not_found_total","Okända resurser","st"],["request_duration_ms_avg","Genomsnittlig svarstid","ms"],["request_duration_ms_max","Maximal svarstid","ms"],["uptime_seconds","Upptid","s"]];
-async function refresh(){try{const r=await fetch('/api/metrics',{cache:'no-store'}),d=await r.json();document.getElementById('cards').innerHTML=shown.map(([k,t,u])=>`<article><code>${k}</code><strong>${d[k]} ${u}</strong><span>${t}</span></article>`).join('');document.getElementById('status').textContent=`Senast uppdaterad ${new Date().toLocaleTimeString()} · sidan hämtar samma data varannan sekund`;}catch(e){document.getElementById('status').textContent=`Kunde inte hämta mätetal: ${e}`;}}refresh();setInterval(refresh,2000);
+const shown=[["http_requests_total","HTTP-anrop","st"],["readings_accepted_total","Accepterade mätningar","st"],
+["validation_errors_total","Valideringsfel","st"],["not_found_total","Okända resurser","st"],["request_duration_ms_avg","Genomsnittlig svarstid","ms"],
+["request_duration_ms_max","Maximal svarstid","ms"],["uptime_seconds","Upptid","s"]];
+async function refresh(){try{const r=await fetch('/api/metrics',{cache:'no-store'}),d=await r.json();document.getElementById('cards')
+.innerHTML=shown.map(([k,t,u])=>`<article><code>${k}</code><strong>${d[k]} ${u}</strong><span>${t}</span></article>`).join('');document.getElementById('status').
+textContent=`Senast uppdaterad ${new Date().toLocaleTimeString()} · sidan hämtar samma data varannan sekund`;}catch(e){document.getElementById('status').
+textContent=`Kunde inte hämta mätetal: ${e}`;}}refresh();setInterval(refresh,2000);
 </script></body></html>)HTML";
 
 std::atomic<bool> running{true};
@@ -132,6 +138,7 @@ private:
     unsigned long long readings_accepted_total = 0;
     unsigned long long validation_errors_total = 0;
     unsigned long long not_found_total = 0;
+    uint32_t unknown_path = 0;
     double duration_sum = 0.0;
     double duration_max = 0.0;
 };
