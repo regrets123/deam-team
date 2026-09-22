@@ -26,6 +26,15 @@ Publisher och subscriber representerar separata klientenheter även om båda kö
 bash run_demo.sh
 ```
 
+## Kontrollera servercertifikatet i PowerShell
+
+Kör kommandot på en rad, eftersom `-ext` och `subjectAltName` måste tillhöra
+samma PowerShell-kommando:
+
+```powershell
+openssl x509 -in generated/server.crt -noout -subject -issuer -dates -ext subjectAltName
+```
+
 Förväntat:
 
 * Testet med fel CA misslyckas under TLS-verifiering

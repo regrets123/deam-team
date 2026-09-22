@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Git Bash otherwise rewrites OpenSSL subjects such as /CN=localhost as paths.
+export MSYS2_ARG_CONV_EXCL="${MSYS2_ARG_CONV_EXCL:+$MSYS2_ARG_CONV_EXCL;}/CN="
+
 mkdir -p generated
 
 openssl req -x509 -newkey rsa:2048 -nodes -days 2 \
