@@ -78,3 +78,4 @@ Desktop.ini
 *.sln.docstates # Visual Studio
 .vscode/settings.json
 .vscode/settings.json
+.cache/clangd/index/main.c.0F7CC08A44585086.idx
