@@ -4,8 +4,8 @@
 
 | Fält | Värde |
 |---|---|
-| Metod och URL | |
-| Lyckad status | |
+| Metod och URL | GET och http://127.0.0.1:8093/api/config?scenario= |
+| Lyckad status | 200 |
 | `Content-Type` | |
 | Obligatoriska svarsfält | |
 | Autentisering | |
@@ -35,14 +35,14 @@
 
 | Scenario | Försök | Status/fel | Väntan | Validering | Resultat |
 |---|---:|---|---:|---|---|
-| `ok` | | | | | |
-| `bad-request` | | | | | |
-| `unauthorized` | | | | | |
-| `rate-limit` | | | | | |
-| `flaky` | | | | | |
-| `bad-json` | | | | | |
-| `wrong-type` | | | | | |
-| `slow` | | | | | |
+| `ok` | 1 | 200 | - | - | success |
+| `bad-request` | 1 | 400 | - | - | stop |
+| `unauthorized` | 1 | 401 | - | - | stop |
+| `rate-limit` | 2 | 429, 200 | 1000ms | - | retry, success |
+| `flaky` | 2 | 500, 200 | 100ms | - | retry, success |
+| `bad-json` | 1 | error=contract | - | - | stop |
+| `wrong-type` | 1 | error=contract | - | - | stop |
+| `slow` | 1 | error=timeout_or_connection | - | - | stop |
 
 ## Idempotens och loggning
 
