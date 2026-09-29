@@ -64,6 +64,7 @@ env/
 # Language Servers
 .clangd/
 .ccls-cache/
+.cache
 compile_commands.json
 
 # Windows specific
@@ -79,3 +80,11 @@ Desktop.ini
 .vscode/settings.json
 .vscode/settings.json
 .cache/clangd/index/main.c.0F7CC08A44585086.idx
+.cache/clangd/index/mqtt.c.1F4585B794F3F5E5.idx
+.cache/clangd/index/mqtt.h.174DD745AF180F87.idx
+.cache/clangd/index/sensor.c.F7EA13E8CAC3CB97.idx
+.gitignore
+.cache/clangd/index/sensor.h.1BB89BC35E2E1472.idx
+.gitignore
+.cache/clangd/index/storage.c.702F149BA3B77725.idx
+.cache/clangd/index/storage.h.E811187A2FB19116.idx
