@@ -79,6 +79,7 @@ Desktop.ini
 *.sln.docstates # Visual Studio
 .vscode/settings.json
 .vscode/settings.json
+.vscode
 .cache/clangd/index/main.c.0F7CC08A44585086.idx
 .cache/clangd/index/mqtt.c.1F4585B794F3F5E5.idx
 .cache/clangd/index/mqtt.h.174DD745AF180F87.idx
